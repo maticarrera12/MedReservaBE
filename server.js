@@ -45,7 +45,6 @@
 // };
 
 // startServer();
-
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -54,7 +53,7 @@ import connectCloudinary from "./config/cloudinary.js";
 import adminRouter from "./routes/adminRoute.js";
 import doctorRouter from "./routes/doctorRoute.js";
 import userRouter from "./routes/userRoute.js";
-import path from "path"; // Importar path
+import path from "path";
 
 // Cargar variables de entorno
 dotenv.config();
@@ -62,6 +61,9 @@ dotenv.config();
 // app config
 const app = express();
 const port = process.env.PORT || 4000;
+
+// Obtener el directorio actual de manera compatible con ES6
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 // Conectar a la base de datos y a Cloudinary de manera asíncrona
 const startServer = async () => {
@@ -78,16 +80,6 @@ const startServer = async () => {
     app.use("/api/doctor", doctorRouter);
     app.use("/api/user", userRouter);
 
-    // Servir archivos estáticos del frontend
-    if (process.env.NODE_ENV === "production") {
-      app.use(express.static(path.join(__dirname, "frontend/build"))); // Ruta de tu carpeta build
-
-      // Ruta por defecto para todas las solicitudes no API (React)
-      app.get("*", (req, res) => {
-        res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
-      });
-    }
-
     // Ruta por defecto
     app.get("/", (req, res) => {
       res.send("API FUNCIONANDO");
@@ -103,4 +95,5 @@ const startServer = async () => {
 };
 
 startServer();
+
 
